@@ -10,6 +10,9 @@ import (
 
 var books []Book
 var nextID = 1
+const invalidBookIdMessage = "Invalid Book ID"
+const bookNotFoundMessage = "Book not found"
+
 
 func GetBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -22,7 +25,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(bookID)
 	if err != nil {
-		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		http.Error(w, invalidBookIdMessage, http.StatusBadRequest)
 		return
 	}
 	var foundBook *Book
@@ -33,7 +36,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if foundBook == nil {
-		http.Error(w, "Book not found", http.StatusNotFound)
+		http.Error(w, bookNotFoundMessage, http.StatusNotFound)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -62,7 +65,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	bookID := vars["id"]
 	id, err := strconv.Atoi(bookID)
 	if err != nil {
-		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		http.Error(w, invalidBookIdMessage, http.StatusBadRequest)
 		return
 	}
 	var updatedBook Book
@@ -79,7 +82,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if index == -1 {
-		http.Error(w, "Book not found", http.StatusNotFound)
+		http.Error(w, bookNotFoundMessage, http.StatusNotFound)
 		return
 	}
 	books[index] = updatedBook
@@ -91,7 +94,7 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	bookID := vars["id"]
 	id, err := strconv.Atoi(bookID)
 	if err != nil {
-		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		http.Error(w, invalidBookIdMessage, http.StatusBadRequest)
 		return
 	}
 	index := -1
@@ -102,7 +105,7 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if index == -1 {
-		http.Error(w, "Book not found", http.StatusNotFound)
+		http.Error(w, bookNotFoundMessage, http.StatusNotFound)
 		return
 	}
 	books = append(books[:index], books[index+1:]...)
